@@ -1,0 +1,161 @@
+{
+  "name": "mesos-master-1",
+  "chef_environment": "kitchen",
+  "json_class": "Chef::Node",
+  "automatic": {
+    "network": {
+      "interfaces": {
+        "lo": {
+          "mtu": "65536",
+          "flags": [
+            "LOOPBACK",
+          "UP",
+          "LOWER_UP"
+            ],
+          "encapsulation": "Loopback",
+          "addresses": {
+            "127.0.0.1": {
+              "family": "inet",
+              "prefixlen": "8",
+              "netmask": "255.0.0.0",
+              "scope": "Node"
+            },
+            "::1": {
+              "family": "inet6",
+              "prefixlen": "128",
+              "scope": "Node"
+            }
+          },
+          "state": "unknown"
+        },
+        "eth1": {
+          "type": "eth",
+          "number": "1",
+          "mtu": "9001",
+          "flags": [
+            "BROADCAST",
+          "MULTICAST",
+          "UP",
+          "LOWER_UP"
+            ],
+          "encapsulation": "Ethernet",
+          "addresses": {
+            "06:F5:B7:1C:2B:2F": {
+              "family": "lladdr"
+            },
+            "192.168.192.168": {
+              "family": "inet",
+              "prefixlen": "24",
+              "netmask": "255.255.255.0",
+              "broadcast": "10.0.1.255",
+              "scope": "Global"
+            },
+            "fe80::4f5:b7ff:fe1c:2b2f": {
+              "family": "inet6",
+              "prefixlen": "64",
+              "scope": "Link"
+            }
+          },
+          "state": "up",
+          "arp": {
+            "10.0.1.155": "06:92:95:35:67:d3",
+            "10.0.1.241": "06:d8:25:a4:0a:1b",
+            "10.0.1.1": "06:73:91:64:4d:f3",
+            "10.0.1.43": "06:39:0f:66:b9:df",
+            "10.0.1.85": "06:d4:d1:f0:e9:01",
+            "10.0.1.21": "06:95:8e:96:ee:b1"
+          },
+          "routes": [
+          {
+            "destination": "default",
+            "family": "inet",
+            "via": "10.0.1.1"
+          },
+          {
+            "destination": "10.0.1.0/24",
+            "family": "inet",
+            "scope": "link",
+            "proto": "kernel",
+            "src": "192.168.192.168"
+          },
+          {
+            "destination": "fe80::/64",
+            "family": "inet6",
+            "metric": "256",
+            "proto": "kernel"
+          }
+          ]
+        }
+      },
+      "default_interface": "eth1",
+      "default_gateway": "10.0.1.1"
+    },
+    "counters": {
+      "network": {
+        "interfaces": {
+          "lo": {
+            "rx": {
+              "bytes": "45511515",
+              "packets": "779654",
+              "errors": "0",
+              "drop": "0",
+              "overrun": "0"
+            },
+            "tx": {
+              "bytes": "45511515",
+              "packets": "779654",
+              "errors": "0",
+              "drop": "0",
+              "carrier": "0",
+              "collisions": "0"
+            }
+          },
+          "eth1": {
+            "tx": {
+              "queuelen": "1000",
+              "bytes": "170348729",
+              "packets": "2134350",
+              "errors": "0",
+              "drop": "0",
+              "carrier": "0",
+              "collisions": "0"
+            },
+            "rx": {
+              "bytes": "364145854",
+              "packets": "1951380",
+              "errors": "0",
+              "drop": "0",
+              "overrun": "0"
+            }
+          }
+        }
+      }
+    },
+    "ipaddress": "10.0.2.15",
+    "macaddress": "06:F5:B7:1C:2B:2F",
+    "ip6address": "fe80::4f5:b7ff:fe1c:2b2f",
+    "recipes": [
+      "mesos::master",
+    "mesos::repo",
+    "apt::default"
+      ],
+    "expanded_run_list": [
+      "mesos::master"
+      ],
+    "roles": [
+      "kitchen"
+      ],
+    "cookbooks": {
+      "mesos": {
+        "version": "1.0.0"
+      },
+      "apt": {
+        "version": "2.9.2"
+      }
+    }
+  },
+  "chef_type": "node",
+  "run_list": [
+    "role[kitchen]"
+    ]
+}

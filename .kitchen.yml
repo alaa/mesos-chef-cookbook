@@ -1,0 +1,46 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+  client_rb:
+    environment: kitchen
+
+platforms:
+  - name: ubuntu-16.04
+    driver:
+      box: opscode-ubuntu-16.04
+      box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-16.04_chef-provisionerless.box
+
+suites:
+  - name: mesos
+    provisioner:
+      client_rb:
+        environment: kitchen
+    data_bags_path: test/integration/mesos/data_bags
+    encrypted_data_bag_secret_key_path: test/integration/mesos/encrypted_data_bag_secret.b64
+    nodes_path: test/integration/mesos/nodes
+    environments_path: test/integration/mesos/environments
+    roles_path: test/integration/mesos/roles
+    run_list:
+      - recipe[docker]
+      - recipe[mesos::master]
+      - recipe[mesos::marathon]
+      - recipe[mesos::chronos]
+      - recipe[mesos::etcd]
+      - recipe[mesos::mesos-dns]
+      - recipe[mesos::calico]
+      - recipe[mesos::rexray]
+    attributes:
+      docker:
+        options:
+          cluster-store: etcd://10.0.2.15:2379
+      mesos:
+        databag_secret_key_path: /tmp/kitchen/encrypted_data_bag_secret
+        discovery_query: "role:kitchen AND chef_environment:kitchen"
+        rexray:
+          aws_region: eu-central-1a
+      mesos_dns:
+        addresses:
+          - 8.8.8.8

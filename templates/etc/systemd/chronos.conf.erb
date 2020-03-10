@@ -1,0 +1,20 @@
+[Unit]
+Description=Chronos Container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+RestartSec=10
+ExecStartPre=/usr/bin/docker pull <%=@docker_image%>
+ExecStart=/usr/bin/docker run \
+          --net=host \
+          -e PORT0=9090 \
+          -e PORT1=9091 \
+          <%=@docker_image%> \
+          --zk_hosts <%=@zookeeper_urls%> \
+          --master zk://<%=@zookeeper_urls%>/mesos
+ExecStop=/usr/bin/docker ps -a | grep <%=@image_name%> | awk '{print $1}' | xargs /usr/bin/docker kill
+
+[Install]
+WantedBy=default.target

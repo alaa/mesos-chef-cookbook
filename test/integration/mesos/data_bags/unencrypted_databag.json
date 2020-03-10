@@ -1,0 +1,11 @@
+{
+  "id": "kitchen",
+  "mesos": {
+    "aws_users": {
+      "rexray": {
+        "access_key_id": "key",
+        "secret_access_key": "secret"
+      }
+    }
+  }
+}

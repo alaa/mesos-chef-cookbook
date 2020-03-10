@@ -1,0 +1,30 @@
+[Unit]
+Description=calico-node
+After=docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+RestartSec=10
+ExecStartPre=-/usr/bin/docker rm -f calico-node
+ExecStartPre=/usr/bin/docker pull <%=@calico_node_repo%>:<%=@calico_node_version%>
+ExecStart=/usr/bin/docker run --net=host --privileged \
+ --name=calico-node \
+ -e NODENAME=${CALICO_NODENAME} \
+ -e IP=${CALICO_IP} \
+ -e IP6=${CALICO_IP6} \
+ -e CALICO_NETWORKING_BACKEND=bird \
+ -e AS=${CALICO_AS} \
+ -e NO_DEFAULT_POOLS=${CALICO_NO_DEFAULT_POOLS} \
+ -e CALICO_LIBNETWORK_ENABLED=true \
+ -e ETCD_ENDPOINTS=<%=@etcd_endpoints%> \
+ -v /var/log/calico:/var/log/calico \
+ -v /run/docker/plugins:/run/docker/plugins \
+ -v /lib/modules:/lib/modules \
+ -v /var/run/calico:/var/run/calico \
+ <%=@calico_node_repo%>:<%=@calico_node_version%>
+
+ExecStop=-/usr/bin/docker stop calico-node
+
+[Install]
+WantedBy=multi-user.target

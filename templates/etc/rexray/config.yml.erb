@@ -1,0 +1,16 @@
+rexray:
+  logLevel: debug
+libstorage:
+  logging:
+    level: debug
+  service: ebs
+  integration:
+    volume:
+      operations:
+        create:
+          default:
+            size: 5
+ebs:
+  accessKey: <%=@aws_access_key_id%>
+  secretKey: <%=@aws_secret_access_key%>
+  region: <%=@aws_region%>

@@ -1,0 +1,31 @@
+[Unit]
+Description=EtcD Container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+RestartSec=10
+ExecStartPre=/usr/bin/docker pull <%=@docker_image%>
+ExecStartPre=/bin/mkdir -p /data/etcd
+ExecStart=/usr/bin/docker run --rm \
+                              -p 2379:2379 \
+                              -p 2380:2380 \
+                              -p 4001:4001 \
+                              --net=host \
+                              --volume=<%=@data_dir%>:/etcd-data \
+                              --name <%=@container_name%> \
+                              <%=@docker_image%> \
+                              -data-dir=/etcd-data \
+                              -name <%=@node_name%> \
+                              -advertise-client-urls http://<%=@ip%>:2379,http://<%=@ip%>:4001 \
+                              -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \
+                              -initial-advertise-peer-urls http://<%=@ip%>:2380 \
+                              -listen-peer-urls http://0.0.0.0:2380 \
+                              -initial-cluster-token <%=@cluster_token%> \
+                              -initial-cluster <%=@initial_cluster%> \
+                              -initial-cluster-state new
+ExecStop=/usr/bin/docker ps -a | grep <%=@container_name%> | awk '{print $1}' | xargs /usr/bin/docker kill
+
+[Install]
+WantedBy=default.target
